@@ -15,13 +15,14 @@ HEADERS = {
 
 class Laptop(BaseModel):
     asin: str
-    title: Optional[str] = ""
     model_number: Optional[str] = ""
     model_name: Optional[str] = ""
     brand: Optional[str] = ""
     storage_type: Optional[str] = ""
     storage_capacity: Optional[str] = ""
     cpu: Optional[str] = ""
+    cpu_cores: Optional[str] = ""
+    cpu_clock: Optional[str] = ""
     ram_type: Optional[str] = ""
     ram_capacity: Optional[str] = ""
     screen_size: Optional[str] = ""

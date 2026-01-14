@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fetch import fetch_laptop
+from fetch import fetch_laptop, Laptop
+import pandas as pd
 
 app = FastAPI()
 
@@ -23,3 +24,16 @@ async def load_laptop_from_amazon(asin: str):
         raise HTTPException(status_code=400, detail="Invalid Asin")
     laptop = fetch_laptop(asin)
     return laptop
+
+@app.post("/admin/add")
+async def add_laptop(laptop: Laptop):
+    data = pd.read_csv("data.csv")
+    if laptop.asin in data['asin'].values:
+        return({"error": "Laptop already exists"})
+    
+    new_row = laptop.dict()
+    data = pd.concat([data, pd.DataFrame([new_row])], ignore_index=True)
+    data.to_csv("data.csv", index=False)
+
+
+    return {"message": "Laptop added successfully"}

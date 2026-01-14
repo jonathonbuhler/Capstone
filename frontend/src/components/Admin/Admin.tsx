@@ -3,7 +3,6 @@ import styles from "./Admin.module.css";
 
 function Admin() {
   const [formData, setFormData] = useState({
-    title: "",
     asin: "",
     model_number: "",
     model_name: "",
@@ -11,6 +10,8 @@ function Admin() {
     storage_type: "",
     storage_capacity: "",
     cpu: "",
+    cpu_cores: "",
+    cpu_clock: "",
     ram_type: "",
     ram_capacity: "",
     screen_size: "",
@@ -41,7 +42,13 @@ function Admin() {
   };
 
   const handleAdd = () => {
-    console.log(formData);
+    fetch("http://localhost:8000/admin/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    }).catch((err) => console.error(err));
   };
 
   return (
@@ -60,7 +67,6 @@ function Admin() {
           <button onClick={handleSearch}>Search</button>
         </div>
         <hr />
-        <h2>{formData.title}</h2>
         <div className={styles.features}>
           <input
             type="text"
@@ -102,6 +108,20 @@ function Admin() {
             placeholder="CPU"
             name="cpu"
             value={formData.cpu}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            placeholder="CPU Cores"
+            name="cpu_cores"
+            value={formData.cpu_cores}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            placeholder="CPU Clock"
+            name="cpu_clock"
+            value={formData.cpu_clock}
             onChange={handleChange}
           />
           <input
@@ -151,6 +171,13 @@ function Admin() {
             placeholder="Battery Capacity"
             name="battery_capacity"
             value={formData.battery_capacity}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            placeholder="Year"
+            name="year"
+            value={formData.year}
             onChange={handleChange}
           />
           <input
