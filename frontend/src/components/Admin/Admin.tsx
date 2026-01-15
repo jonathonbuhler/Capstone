@@ -1,27 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Admin.module.css";
+import type { Laptop } from "../../helpers/Laptop";
 
 function Admin() {
-  const [formData, setFormData] = useState({
+  const [laptops, setLaptops] = useState<Laptop[]>([]);
+  const [formData, setFormData] = useState<Laptop>({
     asin: "",
     model_number: "",
     model_name: "",
     brand: "",
-    storage_type: "",
     storage_capacity: "",
     cpu: "",
     cpu_cores: "",
     cpu_clock: "",
     ram_type: "",
     ram_capacity: "",
+    touch_screen: "",
     screen_size: "",
     screen_width: "",
     screen_height: "",
     screen_refresh: "",
     battery_capacity: "",
-    price: "",
     year: "",
+    gpu_type: "",
+    gpu: "",
+    rating: "",
+    price: "",
   });
+
+  useEffect(() => {
+    fetch("http://localhost:8000/load-all")
+      .then((res) => res.json())
+      .then((data) => setLaptops(data))
+      .catch((err) => console.error(err));
+  }, []);
 
   const handleSearch = () => {
     fetch(`http://localhost:8000/admin/${formData.asin}`)
@@ -51,6 +63,14 @@ function Admin() {
     }).catch((err) => console.error(err));
   };
 
+  const handleLoad = async () => {
+    await fetch(`http://localhost:8000/load/${formData.asin}`)
+      .then((res) => res.json())
+      .then((data) => setFormData(data))
+      .catch((err) => console.error(err));
+    console.log(formData);
+  };
+
   return (
     <div className="main-container">
       <div className={styles["add-data"]}>
@@ -65,130 +85,42 @@ function Admin() {
             onChange={handleChange}
           />
           <button onClick={handleSearch}>Search</button>
+          <button onClick={handleLoad}>Load</button>
         </div>
         <hr />
         <div className={styles.features}>
-          <input
-            type="text"
-            placeholder="Model Number"
-            name="model_number"
-            value={formData.model_number}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Model Name"
-            name="model_name"
-            value={formData.model_name}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Brand"
-            name="brand"
-            value={formData.brand}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Storage Type"
-            name="storage_type"
-            value={formData.storage_type}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Storage Capacity"
-            name="storage_capacity"
-            value={formData.storage_capacity}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="CPU"
-            name="cpu"
-            value={formData.cpu}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="CPU Cores"
-            name="cpu_cores"
-            value={formData.cpu_cores}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="CPU Clock"
-            name="cpu_clock"
-            value={formData.cpu_clock}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Ram Type"
-            name="ram_type"
-            value={formData.ram_type}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Ram Capacity"
-            name="ram_capacity"
-            value={formData.ram_capacity}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Screen Size"
-            name="screen_size"
-            value={formData.screen_size}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Screen Width"
-            name="screen_width"
-            value={formData.screen_width}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Screen Height"
-            name="screen_height"
-            value={formData.screen_height}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Screen Refresh"
-            name="screen_refresh"
-            value={formData.screen_refresh}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Battery Capacity"
-            name="battery_capacity"
-            value={formData.battery_capacity}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Year"
-            name="year"
-            value={formData.year}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Price"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-          />
+          {Object.keys(formData).map((item, i) => (
+            <div key={i} className={styles.textInput}>
+              <label htmlFor={item}>{item}</label>
+              <input
+                type="text"
+                placeholder={item}
+                name={item}
+                value={formData[item as keyof typeof formData]}
+                onChange={handleChange}
+              />
+            </div>
+          ))}
           <button onClick={handleAdd}>Add</button>
         </div>
+        <table>
+          <thead>
+            <tr>
+              {Object.keys(formData).map((d, j) => (
+                <th>{d}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {laptops.map((l, i) => (
+              <tr key={i}>
+                {Object.keys(l).map((d, j) => (
+                  <td>{l[d as keyof typeof l]}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

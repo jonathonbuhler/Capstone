@@ -25,12 +25,16 @@ class Laptop(BaseModel):
     cpu_clock: Optional[str] = ""
     ram_type: Optional[str] = ""
     ram_capacity: Optional[str] = ""
+    touch_screen: Optional[str] = ""    
     screen_size: Optional[str] = ""
     screen_width: Optional[str] = ""
     screen_height: Optional[str] = ""
     screen_refresh: Optional[str] = ""
     battery_capacity: Optional[str] = ""
     year: Optional[str] = ""
+    gpu_type: Optional[str] = ""
+    gpu: Optional[str] = ""
+    rating: Optional[str] = ""
     price: Optional[str] = ""
 
 def fetch_laptop(asin):
@@ -60,8 +64,7 @@ def fetch_laptop(asin):
     print(tech_details)
     
     laptop = Laptop(
-        asin=asin,
-        title=title_tag.get_text() if title_tag else None,
+        asin=asin,        
         model_name = tech_details.get("model name"),
         model_number = tech_details.get("model number"),
         price = price_tag.get_text() if price_tag else None,

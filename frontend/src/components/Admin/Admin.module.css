@@ -26,3 +26,8 @@
 .search input {
   margin-right: 5px;
 }
+
+.textInput {
+  display: flex;
+  flex-direction: column;
+}
