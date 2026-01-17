@@ -5,6 +5,7 @@ import { type Laptop, blank_laptop } from "../../helpers/Laptop";
 function Admin() {
   const [laptops, setLaptops] = useState<Laptop[]>([]);
   const [formData, setFormData] = useState<Laptop>(blank_laptop);
+  const [valid, setValid] = useState<string>("");
 
   useEffect(() => {
     fetch("http://localhost:8000/load-all")
@@ -12,6 +13,23 @@ function Admin() {
       .then((data) => setLaptops(data))
       .catch((err) => console.error(err));
   }, []);
+
+  const handleEdit = () => {
+    console.log(formData);
+    fetch("http://localhost:8000/admin/edit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    }).catch((err) => console.error(err));
+  };
+
+  const handleCheck = () => {
+    fetch(`http://localhost:8000/admin/check/${formData.asin}`)
+      .then((res) => res.json())
+      .then((data) => setValid(data.message));
+  };
 
   const handleSearch = () => {
     fetch(`http://localhost:8000/admin/${formData.asin}`)
@@ -23,9 +41,20 @@ function Admin() {
       .catch((err) => console.error(err));
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e:
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const name = e.target.name;
     if (!name) {
+      return;
+    }
+    if (name == "gpu_type" || name == "touch_screen") {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: e.target.value == "true" ? true : false,
+      }));
       return;
     }
     setFormData((prev) => ({ ...prev, [name]: e.target.value }));
@@ -65,37 +94,69 @@ function Admin() {
           <button onClick={handleSearch}>Search</button>
           <button onClick={handleLoad}>Load</button>
           <button onClick={() => setFormData(blank_laptop)}>Reset</button>
+          <button onClick={handleCheck}>Check</button>
+          <p>In database: {valid}</p>
         </div>
         <hr />
         <div className={styles.features}>
-          {Object.keys(formData).map((item, i) => (
-            <div key={i} className={styles.textInput}>
-              <label htmlFor={item}>{item}</label>
-              <input
-                type="text"
-                placeholder={item}
-                name={item}
-                value={formData[item as keyof typeof formData]}
-                onChange={handleChange}
-              />
-            </div>
-          ))}
+          {Object.keys(formData).map((item, i) => {
+            if (item == "gpu_type" || item == "touch_screen") {
+              return (
+                <div key={i} className={styles.textInput}>
+                  <label htmlFor={item}>{item}</label>
+                  <select
+                    name={item}
+                    value={formData[item as keyof typeof formData] as string}
+                    onChange={handleChange}
+                  >
+                    <option value={"true"}>true</option>
+                    <option value={"false"}>false</option>
+                  </select>
+                </div>
+              );
+            } else {
+              return (
+                <div key={i} className={styles.textInput}>
+                  <label htmlFor={item}>{item}</label>
+                  <input
+                    type="text"
+                    placeholder={item}
+                    name={item}
+                    value={formData[item as keyof typeof formData] as string}
+                    onChange={handleChange}
+                  />
+                </div>
+              );
+            }
+          })}
           <button onClick={handleAdd}>Add</button>
+          <button onClick={handleEdit}>Edit</button>
         </div>
         <table>
           <thead>
             <tr>
+              <th>amazon</th>
               {Object.keys(formData).map((d, j) => (
-                <th>{d}</th>
+                <th key={j}>{d}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {laptops.map((l, i) => (
               <tr key={i}>
-                {Object.keys(l).map((d, j) => (
-                  <td>{l[d as keyof typeof l]}</td>
-                ))}
+                <td>
+                  <a href={`https://amazon.com/dp/${l.asin}`} target="_blank">
+                    link
+                  </a>
+                </td>
+                {Object.keys(l).map((d, j) => {
+                  if (d == "title") {
+                    return (
+                      <td>{l[d as keyof typeof l].toString().slice(0, 20)}</td>
+                    );
+                  }
+                  return <td>{l[d as keyof typeof l]}</td>;
+                })}
               </tr>
             ))}
           </tbody>

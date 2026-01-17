@@ -1,8 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fetch import fetch_laptop, Laptop
-import pandas as pd
 import numpy as np
+import db
+import asyncio
 
 app = FastAPI()
 
@@ -14,10 +15,11 @@ app.add_middleware(
     allow_headers=["*"],  # allow all headers
 )
 
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+@app.on_event("startup")
+async def startup():
+    await db.main()
+    
+    
 
 @app.get("/admin/{asin}")
 async def load_laptop_from_amazon(asin: str):
@@ -26,28 +28,35 @@ async def load_laptop_from_amazon(asin: str):
     laptop = fetch_laptop(asin)
     return laptop
 
+@app.get("/admin/check/{asin}")
+async def check_laptop(asin):
+    inside = await db.check_row(asin)
+    if inside:
+        return {"message": "yes"}
+    else:
+        return {"message": "no"}
+
+
 @app.post("/admin/add")
-async def add_laptop(laptop: Laptop):
-    data = pd.read_csv("data.csv")
-    if laptop.asin in data['asin'].values:
-        return({"error": "Laptop already exists"})
-    
-    new_row = laptop.dict()
-    data = pd.concat([data, pd.DataFrame([new_row])], ignore_index=True)
-    data.to_csv("data.csv", index=False)
+async def add_laptop(laptop: Laptop):    
+    print(laptop.asin)
+    if await db.check_row(laptop.asin):
+        return {"message": "Laptop already exists."}
+    await db.add_row(laptop)
     return {"message": "Laptop added successfully"}
 
 @app.get("/load/{asin}")
 async def load_laptop(asin: str):
-    data = pd.read_csv("data.csv")
-    row = data[data["asin"] == asin]
-    if row.empty:
-        return {"error": "Could not locate laptop."}
-    return row.iloc[0].to_dict()
+    return await db.load_one(asin)
 
 @app.get("/load-all")
-async def load_laptops():
-    data = pd.read_csv("data.csv")
-    
-    return data.to_dict(orient="records")
+async def load_laptops():        
+    return await db.load_all()
+
+@app.post("/admin/edit")
+async def edit_laptop(laptop: Laptop):
+    await db.edit_row(laptop)
+    return {"message": "Successful edit"}
+
+
     

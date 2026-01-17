@@ -1,5 +1,6 @@
 interface Laptop {
   asin: string;
+  title: string;
   model_number: string;
   model_name: string;
   brand: string;
@@ -9,21 +10,22 @@ interface Laptop {
   cpu_clock: string;
   ram_type: string;
   ram_capacity: string;
-  gpu_type: string;
-  gpu: string;
+  touch_screen: boolean;
   screen_size: string;
   screen_width: string;
   screen_height: string;
   screen_refresh: string;
-  touch_screen: string;
   battery_capacity: string;
-  price: string;
-  rating: string;
   year: string;
+  gpu_type: boolean;
+  gpu: string;
+  rating: string;
+  price: string;
 }
 
 const blank_laptop = {
   asin: "",
+  title: "",
   model_number: "",
   model_name: "",
   brand: "",
@@ -33,17 +35,17 @@ const blank_laptop = {
   cpu_clock: "",
   ram_type: "",
   ram_capacity: "",
-  gpu_type: "",
-  gpu: "",
+  touch_screen: false,
   screen_size: "",
   screen_width: "",
   screen_height: "",
   screen_refresh: "",
-  touch_screen: "",
   battery_capacity: "",
-  price: "",
-  rating: "",
   year: "",
+  gpu_type: false,
+  gpu: "",
+  rating: "",
+  price: "",
 };
 
 export { type Laptop, blank_laptop };
