@@ -21,8 +21,6 @@ app.add_middleware(
 async def startup():
     await db.main()
 
-        
-
 @app.get("/admin/load-imgs")
 async def load_imgs():
     df = pd.read_csv("laptop.csv")
@@ -34,10 +32,6 @@ async def load_imgs():
         await db.add_img(img_url, row["asin"])
         print("added img")
         time.sleep(10)
-
-
-
-    
 
 @app.get("/admin/{asin}")
 async def load_laptop_from_amazon(asin: str):

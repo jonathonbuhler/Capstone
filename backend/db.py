@@ -198,6 +198,7 @@ async def load_shop(req: Request):
             stmt += f"AND used = ${i} "
             i+=1
             params.append(used)
-
+        
+        stmt += "LIMIT 27"
         rows = await conn.fetch(stmt,*params)
         return [dict(row) for row in rows]
