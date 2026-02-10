@@ -33,7 +33,8 @@ function Shop() {
                     {l.title.length > 75 ? "..." : ""}
                   </p>
                 </a>
-                <p>${l.price.toFixed(2)}</p>
+                <p>Price: ${l.price.toFixed(2)}</p>
+                <p>Fair-Price: ${l.fair_price}</p>
               </Link>
             );
           })}

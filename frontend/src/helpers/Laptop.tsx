@@ -24,6 +24,7 @@ interface Laptop {
   price: number;
   used: boolean;
   img_url: string;
+  fair_price: number;
 }
 
 const blank_laptop: Laptop = {
@@ -52,6 +53,7 @@ const blank_laptop: Laptop = {
   price: 0,
   used: false,
   img_url: "",
+  fair_price: 0,
 };
 
 export { type Laptop, blank_laptop };
