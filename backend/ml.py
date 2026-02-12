@@ -39,4 +39,4 @@ async def update_fair_prices():
     await conn.close()
 
 
-asyncio.run(update_fair_prices())
+print(df.head())

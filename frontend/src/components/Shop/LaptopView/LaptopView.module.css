@@ -1,0 +1,9 @@
+.laptopv {
+  width: calc(100%-30px);
+  max-width: 1024px;
+}
+
+.laptopv img {
+  object-fit: contain;
+  width: 50%;
+}

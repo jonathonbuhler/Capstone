@@ -138,9 +138,9 @@ function Admin() {
           <thead>
             <tr>
               <th>amazon</th>
-              {Object.keys(formData).map((d, j) => (
-                <th key={j}>{d}</th>
-              ))}
+              <th>asin</th>
+              <th>title</th>
+              <th>price</th>
             </tr>
           </thead>
           <tbody>
@@ -151,14 +151,9 @@ function Admin() {
                     link
                   </a>
                 </td>
-                {Object.keys(l).map((d, j) => {
-                  if (d == "title" || d == "img_url") {
-                    return (
-                      <td>{l[d as keyof typeof l].toString().slice(0, 20)}</td>
-                    );
-                  }
-                  return <td>{String(l[d as keyof typeof l])}</td>;
-                })}
+                <td>{l.asin}</td>
+                <td>{l.title.slice(0, 20)}</td>
+                <td>${l.price.toFixed(2)}</td>
               </tr>
             ))}
           </tbody>

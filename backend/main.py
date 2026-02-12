@@ -59,7 +59,11 @@ async def add_laptop(laptop: Laptop):
 
 @app.get("/load/{asin}")
 async def load_laptop(asin: str):
-    return await db.load_one(asin)
+    return await db.load_one(asin=asin)
+
+@app.get("/laptop/{id}")
+async def shop_laptop(id: int):
+    return await db.load_one(id=id)
 
 @app.get("/load-all")
 async def load_laptops():        

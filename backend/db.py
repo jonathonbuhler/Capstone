@@ -102,10 +102,10 @@ async def load_all():
         rows = await conn.fetch("SELECT * FROM laptop ORDER BY id DESC")
         return [dict(row) for row in rows]
     
-async def load_one(asin):
-    global pool
+async def load_one(asin=None, id=None):
+    global pool    
     async with pool.acquire() as conn:
-        row = await conn.fetchrow("SELECT * FROM laptop WHERE asin=$1", asin)
+        row = await conn.fetchrow("SELECT * FROM laptop WHERE asin=$1 OR id=$2", asin, id)
         if row:
             return dict(row)
         return None
