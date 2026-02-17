@@ -11,6 +11,9 @@ df = pd.get_dummies(df, columns=["ram_type"])
 X = df.drop(columns=["price"])
 y = df["price"]
 
+sc = StandardScaler()
+sc.fit(X)
+X = sc.transform(X)
 
 knn = KNeighborsRegressor(n_neighbors=3)
 knn.fit(X,y)

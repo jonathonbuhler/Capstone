@@ -22,13 +22,12 @@ function Shop() {
 
   useEffect(() => {
     if (width > 1100) {
-      setWordLim(50);
+      setWordLim(80);
     } else if (width > 800) {
-      setWordLim(50);
+      setWordLim(80);
     } else if (width <= 800) {
       setWordLim(100);
     }
-
     console.log();
   }, [width]);
 
@@ -37,22 +36,29 @@ function Shop() {
       <h1>Shop</h1>
       <div className={styles.shop}>
         <Filters setLaptops={setLaptops} />
-        <div className={styles.items}>
-          {laptops.map((l, i) => {
-            return (
-              <Link to={`/laptop/${l.id}`} className={styles.laptop} key={i}>
-                <div className="">
-                  <img src={l.img_url} alt="" />
-                  <p>Price: ${l.price.toFixed(2)}</p>
-                  <p>Fair Price: ${l.fair_price}</p>
-                </div>
-                <p>
-                  {l.title.slice(0, wordLim)}
-                  {l.title.length > wordLim ? "..." : ""}
-                </p>
-              </Link>
-            );
-          })}
+        <div>
+          {" "}
+          <div className={styles.items}>
+            {laptops.map((l, i) => {
+              return (
+                <Link to={`/laptop/${l.id}`} className={styles.laptop} key={i}>
+                  <p>
+                    {l.title.slice(0, wordLim)}
+                    {l.title.length > wordLim ? "..." : ""}
+                  </p>
+                  <div className={styles.pic}>
+                    <img src={l.img_url} alt="" />
+                    <p>Price: ${l.price.toFixed(2)}</p>
+                    <p>Fair Price: ${l.fair_price}</p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+          <div className={styles.page}>
+            <button>Previous Page</button>
+            <button>Next Page</button>
+          </div>
         </div>
       </div>
     </div>

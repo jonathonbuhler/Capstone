@@ -58,14 +58,14 @@ async def edit_row(laptop: Laptop):
                 ram_type=$10,ram_capacity=$11,touch_screen=$12,screen_size=$13,
                 screen_width=$14,screen_height=$15,screen_refresh=$16,
                 battery_capacity=$17,year=$18,dedicated_gpu=$19,gpu=$20,rating=$21,
-                price=$22,used=$23 WHERE asin = $1
+                price=$22,used=$23,img_url=$24,fair_price=$25 WHERE asin = $1
             """,
             laptop.asin,laptop.title,laptop.model_number,laptop.model_name,
             laptop.brand,laptop.storage_capacity,laptop.cpu,laptop.cpu_cores,
             laptop.cpu_clock,laptop.ram_type,laptop.ram_capacity,laptop.touch_screen,
             laptop.screen_size,laptop.screen_width,laptop.screen_height,laptop.screen_refresh,
             laptop.battery_capacity,laptop.year,laptop.dedicated_gpu,laptop.gpu,laptop.rating,
-            laptop.price,laptop.used
+            laptop.price,laptop.used,laptop.img_url,laptop.fair_price
             )
 
 async def add_row(laptop: Laptop):
@@ -76,15 +76,15 @@ async def add_row(laptop: Laptop):
             asin,title,model_number,model_name,brand,storage_capacity,
             cpu,cpu_cores,cpu_clock,ram_type,ram_capacity,touch_screen,
             screen_size,screen_width,screen_height,screen_refresh,
-            battery_capacity,year,dedicated_gpu,gpu,rating,price,used)
+            battery_capacity,year,dedicated_gpu,gpu,rating,price,used,img_url,fair_price)
             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,
-            $16,$17,$18,$19,$20,$21,$22,$23)""",
+            $16,$17,$18,$19,$20,$21,$22,$23,$24,$25)""",
             laptop.asin,laptop.title,laptop.model_number,laptop.model_name,
             laptop.brand,laptop.storage_capacity,laptop.cpu,laptop.cpu_cores,
             laptop.cpu_clock,laptop.ram_type,laptop.ram_capacity,laptop.touch_screen,
             laptop.screen_size,laptop.screen_width,laptop.screen_height,laptop.screen_refresh,
             laptop.battery_capacity,laptop.year,laptop.dedicated_gpu,laptop.gpu,laptop.rating,
-            laptop.price,laptop.used
+            laptop.price,laptop.used,laptop.img_url,laptop.fair_price
         )
 
 async def check_row(asin):
@@ -119,6 +119,7 @@ async def add_img(img_url, asin):
 async def load_shop(req: Request):
     q = dict(req.query_params)
 
+    search = q.get("search")
     brand = q.get("brand")
     price_min = q.get("price_min")
     price_max = q.get("price_max")    
@@ -198,7 +199,9 @@ async def load_shop(req: Request):
             stmt += f"AND used = ${i} "
             i+=1
             params.append(used)
+        if (search):
+            stmt += f"AND LOWER(title) LIKE '%{search.lower()}%'"
         
-        stmt += "LIMIT 27"
+        stmt += "LIMIT 33"
         rows = await conn.fetch(stmt,*params)
         return [dict(row) for row in rows]

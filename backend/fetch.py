@@ -41,7 +41,7 @@ class Laptop(BaseModel):
     price: Optional[float] = 0.0
     used: Optional[bool] = False
     img_url: Optional[str] = ""
-    fair_price: Optional[str] = ""
+    fair_price: Optional[float] = 0.0
 
 def fetch_laptop(asin):
     url = f"https://amazon.com/dp/{asin}"

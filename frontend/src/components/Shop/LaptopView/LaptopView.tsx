@@ -18,11 +18,12 @@ function LaptopView() {
       <div className={styles.laptopv}>
         <h1>{laptop.title}</h1>
         <h2>
-          <a href={`https://amazon.com/dp/${laptop.asin}`}>Amazon</a>
+          <a href={`https://amazon.com/dp/${laptop.asin}`}>Buy on Amazon</a>
         </h2>
-        <p>${laptop.price.toFixed(2)}</p>
-        <p>${laptop.fair_price.toFixed(2)}</p>
+        <p>Price: ${laptop.price.toFixed(2)}</p>
+        <p>Fair Price: ${laptop.fair_price.toFixed(2)}</p>
         <img src={laptop.img_url} alt="" />
+        <p>Rating: {laptop.rating} / 5</p>
         <p>
           RAM: {laptop.ram_capacity} GB {laptop.ram_type}
         </p>
@@ -39,6 +40,13 @@ function LaptopView() {
         </p>
         <p>
           GPU: {laptop.dedicated_gpu ? "Dedicated" : "Integrated"} {laptop.gpu}
+        </p>
+        <p>Condition: {laptop.used ? "Used" : "New"}</p>
+        <p>Year: {laptop.year}</p>
+        <p>Battery Capacity: {laptop.battery_capacity} Wh</p>
+        <p>Brand: {laptop.brand}</p>
+        <p>
+          Model: {laptop.model_name}, {laptop.model_number}
         </p>
       </div>
     </div>

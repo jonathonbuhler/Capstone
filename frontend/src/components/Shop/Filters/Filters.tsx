@@ -8,6 +8,7 @@ interface FilterProps {
 
 function Filters({ setLaptops }: FilterProps) {
   const [filters, setFilters] = useState({
+    title: undefined,
     brand: undefined,
     price_min: undefined,
     price_max: undefined,
@@ -57,8 +58,21 @@ function Filters({ setLaptops }: FilterProps) {
     );
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    console.log("Submit");
+    e.preventDefault();
+    handleFilter();
+  };
+
   return (
-    <div className={styles.filters}>
+    <form className={styles.filters} onSubmit={handleSubmit}>
+      <input
+        type="text"
+        name="search"
+        placeholder="Search"
+        onChange={handleChange}
+      />
+
       <select name="brand" value={filters.brand} onChange={handleChange}>
         <option value="all">All</option>
         <option value="Apple">Apple</option>
@@ -140,7 +154,7 @@ function Filters({ setLaptops }: FilterProps) {
         <option value="all">All</option>
       </select>
       <button onClick={handleFilter}>Load</button>
-    </div>
+    </form>
   );
 }
 

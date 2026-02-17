@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "./Admin.module.css";
 import { type Laptop, blank_laptop } from "../../helpers/Laptop";
 import { getLaptops } from "../../helpers/db";
+import { Link } from "react-router-dom";
 
 function Admin() {
   const [laptops, setLaptops] = useState<Laptop[]>([]);
@@ -68,8 +69,8 @@ function Admin() {
     }).catch((err) => console.error(err));
   };
 
-  const handleLoad = async () => {
-    await fetch(`http://localhost:8000/load/${formData.asin}`)
+  const handleLoad = async (asin: string = formData.asin) => {
+    await fetch(`http://localhost:8000/load/${asin}`)
       .then((res) => res.json())
       .then((data) => setFormData(data))
       .catch((err) => console.error(err));
@@ -90,7 +91,7 @@ function Admin() {
             onChange={handleChange}
           />
           <button onClick={handleSearch}>Search</button>
-          <button onClick={handleLoad}>Load</button>
+          <button onClick={() => handleLoad(formData.asin)}>Load</button>
           <button onClick={() => setFormData(blank_laptop)}>Reset</button>
           <button onClick={handleCheck}>Check</button>
           <p>In database: {valid}</p>
@@ -137,6 +138,7 @@ function Admin() {
         <table>
           <thead>
             <tr>
+              <th>id</th>
               <th>amazon</th>
               <th>asin</th>
               <th>title</th>
@@ -146,13 +148,28 @@ function Admin() {
           <tbody>
             {laptops.map((l, i) => (
               <tr key={i}>
+                <td>{l.id}</td>
                 <td>
                   <a href={`https://amazon.com/dp/${l.asin}`} target="_blank">
                     link
                   </a>
                 </td>
-                <td>{l.asin}</td>
-                <td>{l.title.slice(0, 20)}</td>
+                <td
+                  onClick={() => {
+                    handleLoad(l.asin);
+                  }}
+                >
+                  {l.asin}
+                </td>
+                <td>
+                  <Link
+                    to={`/laptop/${l.id}`}
+                    className={styles.laptop}
+                    key={i}
+                  >
+                    {l.title.slice(0, 20)}
+                  </Link>
+                </td>
                 <td>${l.price.toFixed(2)}</td>
               </tr>
             ))}
