@@ -4,9 +4,10 @@ import type { Laptop } from "../../../helpers/Laptop";
 
 interface FilterProps {
   setLaptops: React.Dispatch<React.SetStateAction<Laptop[]>>;
+  page: number;
 }
 
-function Filters({ setLaptops }: FilterProps) {
+function Filters({ setLaptops, page }: FilterProps) {
   const [filters, setFilters] = useState({
     title: undefined,
     brand: undefined,
@@ -21,11 +22,12 @@ function Filters({ setLaptops }: FilterProps) {
     screen_size_min: undefined,
     screen_size_max: undefined,
     used: false,
+    offset: undefined,
   });
 
   useEffect(() => {
     handleFilter();
-  }, []);
+  }, [page]);
 
   const handleChange = (
     e:
@@ -52,11 +54,13 @@ function Filters({ setLaptops }: FilterProps) {
   const handleFilter = () => {
     const params = new URLSearchParams();
 
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined) {
-        params.append(key, String(value));
-      }
-    });
+    Object.entries({ ...filters, offset: page * 33 }).forEach(
+      ([key, value]) => {
+        if (value !== undefined) {
+          params.append(key, String(value));
+        }
+      },
+    );
     fetch(`http://localhost:8000/load-shop?${params.toString()}`).then((res) =>
       res.json().then((data) => setLaptops(data)),
     );
@@ -70,6 +74,7 @@ function Filters({ setLaptops }: FilterProps) {
 
   return (
     <form className={styles.filters} onSubmit={handleSubmit}>
+      <p>{page}</p>
       <input
         type="text"
         name="search"

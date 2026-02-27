@@ -1,8 +1,7 @@
 import asyncio
 import pandas as pd
-from sklearn.neighbors import KNeighborsRegressor
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
-
 
 async def update_fair(laptops):
     df = pd.DataFrame(laptops)
@@ -15,10 +14,10 @@ async def update_fair(laptops):
     sc.fit(X)
     X = sc.transform(X)
 
-    knn = KNeighborsRegressor(n_neighbors=3)
-    knn.fit(X,y)
+    rf = RandomForestRegressor()
+    rf.fit(X,y)
 
-    fair_price = knn.predict(X)
+    fair_price = rf.predict(X)    
     for i,p in enumerate(fair_price):
         fair_price[i] = round(p, 2)    
     df["fair_price"] = fair_price

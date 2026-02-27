@@ -12,10 +12,10 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # allow all origins (for development)
+    allow_origins=["*"],  
     allow_credentials=True,
-    allow_methods=["*"],  # allow GET, POST, PUT, etc.
-    allow_headers=["*"],  # allow all headers
+    allow_methods=["*"],  
+    allow_headers=["*"],  
 )
 
 @app.on_event("startup")

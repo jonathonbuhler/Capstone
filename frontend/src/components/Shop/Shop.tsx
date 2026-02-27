@@ -26,7 +26,7 @@ function Shop() {
     <div className="main-container">
       <h1>Shop</h1>
       <div className={styles.shop}>
-        <Filters setLaptops={setLaptops} />
+        <Filters setLaptops={setLaptops} page={page} />
         <div>
           {" "}
           <div className={styles.items}>
@@ -40,15 +40,35 @@ function Shop() {
                   <div className={styles.pic}>
                     <img src={l.img_url} alt="" />
                     <p>Price: ${l.price.toFixed(2)}</p>
-                    <p>Fair Price: ${l.fair_price}</p>
+                    <p
+                      className={
+                        l.price < l.fair_price ? styles.good : styles.bad
+                      }
+                    >
+                      Fair Price: ${l.fair_price}
+                    </p>
                   </div>
                 </Link>
               );
             })}
           </div>
           <div className={styles.page}>
-            <button>Previous Page</button>
-            <button>Next Page</button>
+            <button
+              onClick={() => {
+                setPage((prev) => {
+                  if (prev == 0) {
+                    return prev;
+                  } else {
+                    return prev - 1;
+                  }
+                });
+              }}
+            >
+              Previous Page
+            </button>
+            <button onClick={() => setPage((prev) => prev + 1)}>
+              Next Page
+            </button>
           </div>
         </div>
       </div>

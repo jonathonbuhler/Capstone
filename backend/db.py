@@ -132,6 +132,7 @@ async def load_shop(req: Request):
     screen_size_min = q.get("screen_size_min")
     screen_size_max = q.get("screen_size_max")
     used = q.get("used")
+    offset = q.get("offset")
 
     price_min = float(price_min) if price_min else None
     price_max = float(price_max) if price_max else None
@@ -141,6 +142,8 @@ async def load_shop(req: Request):
     storage_max = int(storage_max) if storage_max else None
     screen_size_min = float(screen_size_min) if screen_size_min else None
     screen_size_max = float(screen_size_max) if screen_size_max else None
+    offset = int(offset) if offset else None
+
     if used is not None:
         used = used.lower() == "true"
     if touch_screen is not None:
@@ -200,8 +203,12 @@ async def load_shop(req: Request):
             i+=1
             params.append(used)
         if (search):
-            stmt += f"AND LOWER(title) LIKE '%{search.lower()}%'"
-        
+            stmt += f"AND LOWER(title) LIKE '%{search.lower()}%' "
+        if (offset):
+            stmt += f"OFFSET ${i} "
+            i+=1
+            params.append(offset)
+
         stmt += "LIMIT 33"
         rows = await conn.fetch(stmt,*params)
         return [dict(row) for row in rows]
