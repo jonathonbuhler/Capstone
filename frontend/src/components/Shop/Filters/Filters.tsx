@@ -74,7 +74,6 @@ function Filters({ setLaptops, page }: FilterProps) {
 
   return (
     <form className={styles.filters} onSubmit={handleSubmit}>
-      <p>{page}</p>
       <input
         type="text"
         name="search"

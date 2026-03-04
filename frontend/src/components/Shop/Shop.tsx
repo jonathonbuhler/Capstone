@@ -10,13 +10,21 @@ function Shop() {
   const [page, setPage] = useState(0);
   const width = windowWidth();
   const [wordLim, setWordLim] = useState(0);
+  const [lastPage, setLastPage] = useState(false);
+
+  useEffect(() => {
+    if (laptops.length < 33) {
+      setLastPage(true);
+    } else {
+      setLastPage(false);
+    }
+    console.log(laptops.length);
+  }, [laptops]);
 
   useEffect(() => {
     if (width > 1100) {
       setWordLim(80);
-    } else if (width > 800) {
-      setWordLim(80);
-    } else if (width <= 800) {
+    } else {
       setWordLim(100);
     }
     console.log();
@@ -54,21 +62,18 @@ function Shop() {
           </div>
           <div className={styles.page}>
             <button
-              onClick={() => {
-                setPage((prev) => {
-                  if (prev == 0) {
-                    return prev;
-                  } else {
-                    return prev - 1;
-                  }
-                });
-              }}
+              onClick={() => setPage((prev) => prev - 1)}
+              disabled={page == 0}
             >
-              Previous Page
+              {"<"}
             </button>
-            <button onClick={() => setPage((prev) => prev + 1)}>
-              Next Page
+            <button
+              disabled={lastPage}
+              onClick={() => setPage((prev) => prev + 1)}
+            >
+              {">"}
             </button>
+            <p>Page: {page + 1}</p>
           </div>
         </div>
       </div>
