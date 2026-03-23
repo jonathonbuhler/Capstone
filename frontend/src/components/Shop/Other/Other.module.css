@@ -1,0 +1,8 @@
+.other {
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  width: 100%;
+  max-width: 1140px;
+  padding: 10px;
+}

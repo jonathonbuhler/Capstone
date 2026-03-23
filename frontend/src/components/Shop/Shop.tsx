@@ -4,6 +4,7 @@ import styles from "./Shop.module.css";
 import Filters from "./Filters/Filters";
 import { Link } from "react-router-dom";
 import windowWidth from "../../helpers/windowWidth";
+import Other from "./Other/Other.tsx";
 
 function Shop() {
   const [laptops, setLaptops] = useState<Laptop[]>([]);
@@ -33,6 +34,7 @@ function Shop() {
   return (
     <div className="main-container">
       <h1>Shop</h1>
+      <Other />
       <div className={styles.shop}>
         <Filters setLaptops={setLaptops} page={page} />
         <div>
