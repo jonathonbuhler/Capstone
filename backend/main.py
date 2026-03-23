@@ -21,6 +21,8 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup():
     await db.main()
+    laptops = await db.load_ml()
+    await ml.train(laptops)
 
 @app.get("/admin/load-imgs")
 async def load_imgs():
@@ -77,10 +79,14 @@ async def load_shop(req: Request):
 @app.get("/admin/update-fair")
 async def update_fair():
     laptops = await db.load_ml()
-    df = await ml.update_fair(laptops)
+    df = await ml.train(laptops)
     await db.update_fair_prices(df)
     return {"message": "success"}
 
+@app.post("/predict-fair")
+async def predict_fair(laptop):
+    return ml.predict_fair(laptop)
+    
 @app.get("/admin/{asin}")
 async def load_laptop_from_amazon(asin: str):
     if len(asin) != 10:

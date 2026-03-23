@@ -1,6 +1,49 @@
+import { useState } from "react";
 import styles from "./Other.module.css";
 
 function Other() {
+  const [laptop, setLaptop] = useState({
+    year: 0,
+    storage_capacity: 0,
+    ram_capacity: 0,
+    ram_type: "DDR4",
+    dedicated_gpu: false,
+    cpu_cores: 0,
+    cpu_clock: 0,
+    touch_screen: false,
+    screen_size: 0,
+    screen_width: 0,
+    screen_height: 0,
+    screen_refresh: 0,
+    battery_capacity: 0,
+    fair_price: 0,
+  });
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
+
+  const handleChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    let name = e.target.name;
+    let value: number | boolean | string = e.target.value;
+    if (name == "dedicated_gpu" || name == "touch_screen") {
+      if (value == "false") {
+        value = false;
+      }
+      if (value == "true") {
+        value = true;
+      }
+    } else if (name != "ram_type") {
+      value = parseFloat(value);
+    }
+    console.log(laptop);
+    setLaptop({ ...laptop, [name]: value });
+  };
+
   return (
     <div className={styles.other}>
       <div className="dropdown">
@@ -13,66 +56,94 @@ function Other() {
           Price Your Laptop
         </button>
         <div className="dropdown-menu">
-          <form className={styles.form}>
+          <form className={styles.form} onSubmit={handleSubmit}>
             <label htmlFor="year">Year</label>
-            <input type="number" name="year" placeholder="Year" />
+            <input
+              value={laptop.year}
+              onChange={handleChange}
+              type="number"
+              name="year"
+              placeholder="Year"
+            />
             <label htmlFor="storage_capacity">Storage Capacity</label>
             <input
               type="number"
+              onChange={handleChange}
               name="storage_capacity"
               placeholder="Storage Capactiy"
             />
             <label htmlFor="ram_capacity">Ram Capacity (GB)</label>
-            <input name="ram_capacity" type="text" placeholder="Ram Capacity" />
+            <input
+              name="ram_capacity"
+              type="text"
+              onChange={handleChange}
+              placeholder="Ram Capacity"
+            />
             <label htmlFor="ram_type">Ram Type</label>
-            <select name="ram_type">
+            <select onChange={handleChange} name="ram_type">
               <option value="DDR3">DDR3</option>
               <option value="DDR4">DDR4</option>
               <option value="DDR5">DDR5</option>
             </select>
             <label htmlFor="dedicated_gpu">Dedicated GPU</label>
-            <select name="dedicated_gpu">
+            <select onChange={handleChange} name="dedicated_gpu">
               <option value="true">No</option>
               <option value="false">Yes</option>
             </select>
             <label htmlFor="cpu_cores">CPU Core Count</label>
             <input
               type="number"
+              onChange={handleChange}
               name="cpu_cores"
               placeholder="CPU Core Count"
             />
             <label htmlFor="cpu_clock">CPU Clock Speed (GHz)</label>
             <input
               name="cpu_clock"
+              onChange={handleChange}
               type="number"
               placeholder="CPU Clock Speed"
             />
-            <label htmlFor="touchscreen">Touchscreen</label>
-            <select name="touchscreen">
+            <label htmlFor="touch_screen">Touchscreen</label>
+            <select onChange={handleChange} name="touch_screen">
               <option value="false">No</option>
               <option value="true">Yes</option>
             </select>
             <label htmlFor="screen_size">Screen Size (inches)</label>
             <input
               type="number"
+              onChange={handleChange}
               placeholder="Screen Size (inches)"
               name="screen_size"
             />
             <label htmlFor="screen_width">Screen Resolution (pixels)</label>
             <input
               type="number"
+              onChange={handleChange}
               placeholder="Screen Width"
               name="screen_width"
             />
             <input
               type="number"
+              onChange={handleChange}
               placeholder="Screen Height"
               name="screen_width"
             />
             <label htmlFor="screen_refresh">Screen Refresh Rate (Hz)</label>
-            <input type="number" placeholder="Screen Refresh Rate" />
+            <input
+              name="screen_refresh"
+              onChange={handleChange}
+              type="number"
+              placeholder="Screen Refresh Rate"
+            />
             <label htmlFor="battery_capacity">Battery Capacity (Wh)</label>
-            <input type="number" placeholder="Battery Capacity" />
+            <input
+              name="battery_capacity"
+              onChange={handleChange}
+              type="number"
+              placeholder="Battery Capacity"
+            />
+            <p>Predicted Fair-Price: ${laptop.fair_price.toFixed(2)}</p>
             <button className="btn btn-primary">Submit</button>
           </form>
         </div>
