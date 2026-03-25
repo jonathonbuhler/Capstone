@@ -84,8 +84,10 @@ async def update_fair():
     return {"message": "success"}
 
 @app.post("/predict-fair")
-async def predict_fair(laptop):
-    return ml.predict_fair(laptop)
+async def predict_fair(laptop: Laptop):
+    fair_price = await ml.predict_fair(laptop)
+    print(fair_price)
+    return {"fair_price": fair_price}
     
 @app.get("/admin/{asin}")
 async def load_laptop_from_amazon(asin: str):

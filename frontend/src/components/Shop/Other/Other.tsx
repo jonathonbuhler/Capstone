@@ -3,6 +3,8 @@ import styles from "./Other.module.css";
 
 function Other() {
   const [laptop, setLaptop] = useState({
+    id: 0,
+    asin: "",
     year: 0,
     storage_capacity: 0,
     ram_capacity: 0,
@@ -19,8 +21,23 @@ function Other() {
     fair_price: 0,
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (
+    e: React.MouseEvent<HTMLButtonElement> | React.FormEvent<HTMLFormElement>,
+  ) => {
     e.preventDefault();
+    e.stopPropagation();
+    fetch("http://localhost:8000/predict-fair", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(laptop),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setLaptop({ ...laptop, fair_price: data.fair_price });
+      })
+      .catch((err) => console.error(err));
   };
 
   const handleChange = (
@@ -40,7 +57,6 @@ function Other() {
     } else if (name != "ram_type") {
       value = parseFloat(value);
     }
-    console.log(laptop);
     setLaptop({ ...laptop, [name]: value });
   };
 
@@ -52,6 +68,7 @@ function Other() {
           type="button"
           data-bs-toggle="dropdown"
           aria-expanded="false"
+          data-bs-auto-close="outside"
         >
           Price Your Laptop
         </button>
@@ -65,7 +82,7 @@ function Other() {
               name="year"
               placeholder="Year"
             />
-            <label htmlFor="storage_capacity">Storage Capacity</label>
+            <label htmlFor="storage_capacity">Storage Capacity (GB)</label>
             <input
               type="number"
               onChange={handleChange}
@@ -84,6 +101,8 @@ function Other() {
               <option value="DDR3">DDR3</option>
               <option value="DDR4">DDR4</option>
               <option value="DDR5">DDR5</option>
+              <option value="LPDDR4">LPDDR4</option>
+              <option value="LPDDR5">LPDDR5</option>
             </select>
             <label htmlFor="dedicated_gpu">Dedicated GPU</label>
             <select onChange={handleChange} name="dedicated_gpu">
@@ -127,7 +146,7 @@ function Other() {
               type="number"
               onChange={handleChange}
               placeholder="Screen Height"
-              name="screen_width"
+              name="screen_height"
             />
             <label htmlFor="screen_refresh">Screen Refresh Rate (Hz)</label>
             <input
@@ -144,7 +163,13 @@ function Other() {
               placeholder="Battery Capacity"
             />
             <p>Predicted Fair-Price: ${laptop.fair_price.toFixed(2)}</p>
-            <button className="btn btn-primary">Submit</button>
+            <button
+              type="submit"
+              onClick={handleSubmit}
+              className="btn btn-primary"
+            >
+              Submit
+            </button>
           </form>
         </div>
       </div>

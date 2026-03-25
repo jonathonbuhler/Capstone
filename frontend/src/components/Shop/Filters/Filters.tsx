@@ -75,13 +75,15 @@ function Filters({ setLaptops, page }: FilterProps) {
 
   return (
     <form className={styles.filters} onSubmit={handleSubmit}>
+      <h3>Filters</h3>
+      <label htmlFor="search">Search</label>
       <input
         type="text"
         name="search"
         placeholder="Search"
         onChange={handleChange}
       />
-
+      <label htmlFor="brand">Brand</label>
       <select name="brand" value={filters.brand} onChange={handleChange}>
         <option value="all">All</option>
         <option value="Apple">Apple</option>
@@ -95,6 +97,7 @@ function Filters({ setLaptops, page }: FilterProps) {
         <option value="Dell">Dell</option>
         <option value="KAIGERR">KAIGERR</option>
       </select>
+      <label htmlFor="price_min">Price</label>
       <input
         value={filters.price_min}
         type="number"
@@ -109,6 +112,7 @@ function Filters({ setLaptops, page }: FilterProps) {
         placeholder="Maximum Price"
         onChange={handleChange}
       />
+      <label htmlFor="ram_type">Ram Type</label>
       <select name="ram_type" onChange={handleChange} value={filters.ram_type}>
         <option value="all">All</option>
         <option value="DDR3">DDR3</option>
@@ -116,6 +120,7 @@ function Filters({ setLaptops, page }: FilterProps) {
         <option value="DDR5">DDR5</option>
         <option value="LPDDR5">LPDDR5</option>
       </select>
+      <label htmlFor="ram_min">Ram Capacity (GB)</label>
       <input
         type="number"
         name="ram_min"
@@ -130,6 +135,7 @@ function Filters({ setLaptops, page }: FilterProps) {
         onChange={handleChange}
         value={filters.ram_max}
       />
+      <label htmlFor="storage_min">Storage Capacity (GB)</label>
       <input
         type="number"
         name="storage_min"
@@ -144,6 +150,7 @@ function Filters({ setLaptops, page }: FilterProps) {
         onChange={handleChange}
         value={filters.storage_max}
       />
+      <label htmlFor="touch_screen">Touchscreen</label>
       <select
         name="touch_screen"
         onChange={handleChange}
@@ -153,6 +160,7 @@ function Filters({ setLaptops, page }: FilterProps) {
         <option value="true">Touchscreen</option>
         <option value="false">Not Touchscreen</option>
       </select>
+      <label htmlFor="screen_size_min">Screen Size</label>
       <input
         type="number"
         name="screen_size_min"
@@ -167,12 +175,15 @@ function Filters({ setLaptops, page }: FilterProps) {
         onChange={handleChange}
         value={filters.screen_size_max}
       />
+      <label htmlFor="used">Condition</label>
       <select name="used" value={String(filters.used)} onChange={handleChange}>
         <option value="all">All</option>
         <option value="false">New</option>
         <option value="true">Used / Refurbished</option>
       </select>
-      <button onClick={handleFilter}>Search</button>
+      <button className="btn btn-primary" onClick={handleFilter}>
+        Search
+      </button>
     </form>
   );
 }

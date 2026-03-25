@@ -229,6 +229,7 @@ async def load_ml():
         rows = await conn.fetch("""SELECT 
                     id,storage_capacity,cpu_cores,cpu_clock,ram_type,
                     ram_capacity,touch_screen,screen_size,screen_refresh,
+                    screen_width, screen_height,
                     battery_capacity,year,dedicated_gpu,rating,price,used
                     FROM laptop ORDER BY id DESC""")
         return [dict(row) for row in rows]

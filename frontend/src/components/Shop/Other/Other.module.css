@@ -33,5 +33,9 @@
 }
 
 .form button:hover {
-  color: grey;
+  color: white;
+}
+
+.form button:focus {
+  color: white;
 }
