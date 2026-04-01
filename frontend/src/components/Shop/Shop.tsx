@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import type { Laptop } from "../../helpers/Laptop";
 import styles from "./Shop.module.css";
-import Filters from "./Filters/Filters";
+import { Filters } from "./Filters/Filters";
 import { Link } from "react-router-dom";
 import windowWidth from "../../helpers/windowWidth";
 import Other from "./Other/Other.tsx";
+import { blank_filter } from "../../helpers/filter.tsx";
 
 function Shop() {
   const [laptops, setLaptops] = useState<Laptop[]>([]);
@@ -12,6 +13,7 @@ function Shop() {
   const width = windowWidth();
   const [wordLim, setWordLim] = useState(0);
   const [lastPage, setLastPage] = useState(false);
+  const [filters, setFilters] = useState(blank_filter);
 
   useEffect(() => {
     if (laptops.length < 33) {
@@ -34,11 +36,20 @@ function Shop() {
   return (
     <div className="main-container">
       <h1>Shop</h1>
-      <Other />
+      <Other
+        setLaptops={setLaptops}
+        page={page}
+        setFilters={setFilters}
+        filters={filters}
+      />
       <div className={styles.shop}>
-        <Filters setLaptops={setLaptops} page={page} />
+        <Filters
+          setFilters={setFilters}
+          filters={filters}
+          setLaptops={setLaptops}
+          page={page}
+        />
         <div>
-          {" "}
           <div className={styles.items}>
             {laptops.map((l, i) => {
               return (
